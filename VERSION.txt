@@ -1,0 +1,4 @@
+Theory Roulette r1
+Build: 2026-10-16 root-index rebuild
+Entry: /index.html
+Cards: 100 (55 inform, 45 intervene)

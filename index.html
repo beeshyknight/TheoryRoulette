@@ -112,9 +112,10 @@ button,input,textarea{font:inherit}
   <p class="subtitle">Theories that inform. Approaches that intervene. Draw one, use it on practice, then challenge it.</p>
   <div class="mode-rail"><div class="mode-card current"><div class="mname">MIXED RUN</div><div class="mdesc">10 rounds. Informing theories and interventions in one deck.</div></div></div>
   <div class="hint"><b>WHEEL</b> choose run · <b>BUTTON</b> start</div>
-  <div class="bootstrap-note">R1 CREATION · LOADING INTERACTION LAYER</div>
+  <div class="bootstrap-note" id="boot-status">R1 ENTRY LOADED · BUTTON TO START</div>
 </section></main>
-<noscript><style>.bootstrap-note{display:none}</style></noscript>
+<noscript><style>.bootstrap-note{color:#ff8ea0!important}</style></noscript>
+<script>window.onerror=function(m){var e=document.getElementById("boot-status");if(e){e.textContent="R1 ENTRY LOADED · GAME ERROR";e.style.color="#ff8ea0";}return false;};</script>
 <script>(function () {
   const C = (id, name, type, family, summary, helps, limits) => ({ id, name, type, family, summary, helps, limits });
 
