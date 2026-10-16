@@ -1,0 +1,9 @@
+Theory Roulette r1 validation
+
+DATA  100 cards (55 inform / 45 intervene)
+DATA  40 practice cases
+DATA  16 wildcards
+DATA  16 case modifiers
+STRUCTURE  mirrors known-working Theory Lab r1 port
+ENTRY  index.html
+ASSETS  all local; no network dependency

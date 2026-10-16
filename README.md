@@ -1,53 +1,33 @@
-# Theory Roulette — Rabbit r1 Creation
+# Theory Roulette r1
 
-This package is intentionally structured so `index.html` is at the ROOT of the ZIP/archive.
+A Rabbit r1 Creation built using the same project structure and R1 bridge pattern as the known-working Theory Lab r1 port and Rabbit's public Creations SDK demo.
 
-## Required runtime entry point
+## Files
 
-`/index.html`
+- `index.html` — R1 entry point
+- `css/r1.css` — 240×282 interface
+- `js/r1-bridge.js` — wheel / side button / long-press / storage bridge
+- `js/r1-app.js` — game engine
+- `js/theoryData.js` — 100 theory/intervention cards
+- `js/gameData.js` — practice situations, modifiers and wildcards
+- `assets/images/` — local PNG assets used on-screen
+- `dev.html` — desktop R1 simulator
 
-The runtime is self-contained: all HTML, CSS, the 100-card theory/intervention deck, cases, wildcards and JavaScript are inside `index.html`. The `assets/` directory contains editable SVG artwork plus PNG fallbacks/reference assets, but the game does not depend on external network files to display its first screen.
+## Controls
 
-## r1 layout and controls
+- Wheel up/down: move through modes/cards/prompts/link choices
+- Side click: select / continue
+- Long press: jump to the critical-challenge reflection prompt
+- Shake: wildcard during case/reflection/link stages
 
-- Viewport: 240 × 282 pixels
-- Wheel up/down: move left/right through modes and cards (`scrollUp`, `scrollDown`)
-- Side button: select/draw/continue (`sideClick`)
-- Side-button long press: reflection input attempt where the WebView exposes speech recognition (`longPressStart`, `longPressEnd`)
-- Accelerometer: shake to draw a wildcard when `window.creationSensors.accelerometer` is available
-- Browser fallback controls appear only outside the r1 Creation environment.
+The public Creations SDK documents wheel events (`scrollUp`, `scrollDown`), side-button events (`sideClick`, `longPressStart`, `longPressEnd`), `creationStorage`, `PluginMessageHandler` and `creationSensors.accelerometer`.
 
-## Game content
+## Local test
 
-- 100 cards total
-- 55 “theories that inform”
-- 45 “approaches that intervene”
-- UK health and social care practice situations
-- Wildcards including lived experience, power, law, environment, culture, communication, inequality, ethics, trauma, relationships, reasonable adjustments and uncertainty
-- Theory → practice → limitation → theory/intervention-link game loop
-- XP, chain scoring and no-repeat run logic
+Serve this folder rather than double-clicking `index.html`, because the app uses ES modules:
 
-## Blank-screen safeguard
-
-The first home screen is literal static HTML already present in `index.html`; it does not wait for JavaScript to create the interface. If JavaScript fails, that static screen remains visible. The archive also contains no external CSS or JavaScript dependencies.
-
-## Important packaging detail
-
-Do NOT wrap these files inside another folder when creating an import ZIP. The archive root must contain `index.html` directly.
-
-Correct:
-
-```
-/index.html
-/README.md
-/assets/...
-/screenshots/...
+```bash
+python3 -m http.server 8000
 ```
 
-Incorrect:
-
-```
-/theory-roulette/index.html
-```
-
-The previous build used the second structure, which can leave an importer with no root entry page.
+Then open `http://localhost:8000/dev.html`.
