@@ -6,18 +6,25 @@
   <meta name="theme-color" content="#07101c" />
   <meta name="description" content="Theory Roulette r1: theory and intervention card game for health and social care education." />
   <title>Theory Roulette r1</title>
-  <link rel="stylesheet" href="./css/r1.css" />
+  <style>
+    html,body{margin:0;width:240px;height:282px;overflow:hidden;background:#07101c;color:#fff;font-family:Arial,Helvetica,sans-serif}
+    #app{width:240px;height:282px;background:#07101c}
+    .boot-fallback{height:282px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;background:linear-gradient(160deg,#101a38,#07101c 58%,#112423)}
+    .boot-logo{width:70px;height:88px;border:2px solid #8d73ff;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#5142b8,#27245a);font-weight:900;font-size:22px;transform:rotate(-5deg);box-shadow:18px 8px 0 -3px #9a5725,18px 8px 0 -1px #ff9b42}
+    .boot-fallback strong{font-size:15px;letter-spacing:.07em}.boot-fallback span{font-size:9px;color:#9cadc1}
+  </style>
+  <link rel="stylesheet" href="./r1.css" />
 </head>
 <body>
   <main id="app" aria-live="polite">
     <section class="boot-fallback">
       <div class="boot-logo">TR</div>
       <strong>THEORY ROULETTE</strong>
-      <span>Loading the deck…</span>
+      <span>Loading 100 cards…</span>
     </section>
   </main>
-  <noscript><div class="noscript">Theory Roulette needs JavaScript enabled.</div></noscript>
-  <script src="./js/r1-bridge.js"></script>
-  <script type="module" src="./js/r1-app.js"></script>
+  <noscript>Theory Roulette needs JavaScript enabled.</noscript>
+  <script src="./r1-bridge.js"></script>
+  <script type="module" src="./r1-app.js"></script>
 </body>
 </html>

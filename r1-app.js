@@ -43,11 +43,11 @@ function currentDeck(){
 }
 function mini(card){
   const icon=card.type==='inform'?'card_inform.png':'card_intervene.png';
-  return `<div class="mini"><img src="./assets/images/${icon}" alt=""><div class="mini-copy"><small>${card.type==='inform'?'THEORY THAT INFORMS':'APPROACH THAT INTERVENES'}</small><b>${esc(card.name)}</b></div></div>`;
+  return `<div class="mini"><img src="${icon}" alt=""><div class="mini-copy"><small>${card.type==='inform'?'THEORY THAT INFORMS':'APPROACH THAT INTERVENES'}</small><b>${esc(card.name)}</b></div></div>`;
 }
 function renderHome(){
   const rail=modes.map((m,i)=>{let d=i-state.cursor;if(d>2)d-=modes.length;if(d<-2)d+=modes.length;const cls=d===0?'current':d===-1?'prev':d===1?'next':'far';return `<div class="mode-card ${cls}"><b>${esc(m.name)}</b><span>${esc(m.desc)}</span></div>`}).join('');
-  return `<section class="screen">${top('100 CARDS')}<div class="home-art"><img class="logo" src="./assets/images/logo.png" alt=""><img class="card-a" src="./assets/images/card_inform.png" alt=""><img class="card-b" src="./assets/images/card_intervene.png" alt=""></div><h1 class="home-title">SPIN.<br>THINK. LINK.</h1><p class="home-copy">Flick through the deck, draw a lens, use it on a practice situation, then challenge it with another perspective.</p><div class="mode-strip">${rail}</div><div class="hint"><b>WHEEL</b> choose · <b>BUTTON</b> start</div></section>`;
+  return `<section class="screen">${top('100 CARDS')}<div class="home-art"><img class="logo" src="logo.png" alt=""><img class="card-a" src="card_inform.png" alt=""><img class="card-b" src="card_intervene.png" alt=""></div><h1 class="home-title">SPIN.<br>THINK. LINK.</h1><p class="home-copy">Flick through the deck, draw a lens, use it on a practice situation, then challenge it with another perspective.</p><div class="mode-strip">${rail}</div><div class="hint"><b>WHEEL</b> choose · <b>BUTTON</b> start</div></section>`;
 }
 function cardHtml(card,pos){
   return `<article class="card ${card.type} p${pos}" data-pos="${pos}"><div class="type">${card.type==='inform'?'THEORY · INFORM':'APPROACH · INTERVENE'}</div><div class="number">#${pad(card.id)}</div><h2>${esc(card.name)}</h2><p>${esc(card.summary)}</p><div class="family">${esc(card.family)}</div></article>`;
@@ -80,11 +80,11 @@ function renderResult(){
   return `<section class="screen">${top('ROUND COMPLETE')}<div class="score">+${state.roundScore}</div><div class="score-label">REFLECTION XP</div><div class="bridge"><small>YOUR THEORY–PRACTICE BRIDGE</small><b>${esc(state.card.name)} ↔ ${esc(state.linked.name)}</b><p>Now ask whether the second card strengthens, challenges or changes what you would actually do.</p></div><div class="stats"><div class="stat"><b>${state.streak}</b><span>streak</span></div><div class="stat"><b>${Object.keys(state.progress.seen).length}</b><span>collected</span></div><div class="stat"><b>${state.score}</b><span>run xp</span></div></div><div class="hint"><b>BUTTON</b> ${state.round+1>=state.mode.rounds?'finish':'next round'}</div></section>`;
 }
 function renderEnd(){
-  return `<section class="screen">${top('RUN COMPLETE')}<div class="home-art"><img class="logo" src="./assets/images/logo.png" alt=""></div><h1 class="home-title">DECK<br>COMPLETE.</h1><p class="home-copy">You scored <b>${state.score} XP</b> and built ${state.streak} theory–practice links. Next run, deliberately choose cards you would normally overlook.</p><div class="stats"><div class="stat"><b>${Object.keys(state.progress.seen).length}</b><span>of 100 seen</span></div><div class="stat"><b>${state.progress.bestStreak}</b><span>best streak</span></div><div class="stat"><b>${state.progress.runs}</b><span>runs</span></div></div><div class="hint"><b>BUTTON</b> return home</div></section>`;
+  return `<section class="screen">${top('RUN COMPLETE')}<div class="home-art"><img class="logo" src="logo.png" alt=""></div><h1 class="home-title">DECK<br>COMPLETE.</h1><p class="home-copy">You scored <b>${state.score} XP</b> and built ${state.streak} theory–practice links. Next run, deliberately choose cards you would normally overlook.</p><div class="stats"><div class="stat"><b>${Object.keys(state.progress.seen).length}</b><span>of 100 seen</span></div><div class="stat"><b>${state.progress.bestStreak}</b><span>best streak</span></div><div class="stat"><b>${state.progress.runs}</b><span>runs</span></div></div><div class="hint"><b>BUTTON</b> return home</div></section>`;
 }
 function wildOverlay(){
   if(!state.wildcard)return '';
-  return `<div class="wild-overlay"><div class="wild"><img src="./assets/images/wildcard.png" alt=""><small>SHAKE WILDCARD · +75 XP</small><h2>${esc(state.wildcard.name)}</h2><p>${esc(state.wildcard.prompt)}</p><div class="bonus">Widen the formulation before you continue. BUTTON when discussed.</div></div></div>`;
+  return `<div class="wild-overlay"><div class="wild"><img src="wildcard.png" alt=""><small>SHAKE WILDCARD · +75 XP</small><h2>${esc(state.wildcard.name)}</h2><p>${esc(state.wildcard.prompt)}</p><div class="bonus">Widen the formulation before you continue. BUTTON when discussed.</div></div></div>`;
 }
 function render(){
   try{

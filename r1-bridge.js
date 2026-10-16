@@ -1,6 +1,6 @@
 window.R1Bridge = (() => {
-  const listeners = { up: [], down: [], click: [], long: [], longEnd: [] };
-  const KEY = 'theory_roulette_r1_v1';
+  const listeners = { up: [], down: [], click: [], long: [] };
+  const KEY = 'theory_roulette_r1_v12';
 
   const encode = (value) => {
     const json = JSON.stringify(value);
@@ -48,43 +48,41 @@ window.R1Bridge = (() => {
     }
   }
 
-  function emit(type) { (listeners[type] || []).forEach(fn => fn()); }
-  function on(type, fn) { listeners[type].push(fn); }
+  function emit(type) {
+    (listeners[type] || []).forEach(fn => fn());
+  }
+  function on(type, fn) {
+    listeners[type].push(fn);
+  }
 
   window.addEventListener('scrollUp', () => emit('up'));
   window.addEventListener('scrollDown', () => emit('down'));
   window.addEventListener('sideClick', () => emit('click'));
   window.addEventListener('longPressStart', () => emit('long'));
-  window.addEventListener('longPressEnd', () => emit('longEnd'));
 
+  // Desktop / phone fallbacks for development.
   window.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') emit('up');
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') emit('down');
     if (event.key === 'Enter' || event.key === ' ') emit('click');
     if (event.key.toLowerCase() === 'h') emit('long');
-    if (event.key.toLowerCase() === 'e') emit('longEnd');
   });
 
-  let touchX = null;
   let touchY = null;
   let touchAt = 0;
   window.addEventListener('touchstart', (event) => {
-    touchX = event.touches[0]?.clientX ?? null;
     touchY = event.touches[0]?.clientY ?? null;
     touchAt = Date.now();
   }, { passive: true });
   window.addEventListener('touchend', (event) => {
-    if (touchX === null || touchY === null) return;
-    const endX = event.changedTouches[0]?.clientX ?? touchX;
+    if (touchY === null) return;
     const endY = event.changedTouches[0]?.clientY ?? touchY;
-    const dx = endX - touchX;
     const dy = endY - touchY;
     const duration = Date.now() - touchAt;
     if (duration > 650) emit('long');
-    else if (Math.abs(dx) > 28) emit(dx > 0 ? 'up' : 'down');
-    else if (Math.abs(dy) > 28) emit(dy > 0 ? 'up' : 'down');
+    else if (Math.abs(dy) > 26) emit(dy > 0 ? 'up' : 'down');
     else emit('click');
-    touchX = touchY = null;
+    touchY = null;
   }, { passive: true });
 
   return {
@@ -92,8 +90,9 @@ window.R1Bridge = (() => {
     onDown: fn => on('down', fn),
     onClick: fn => on('click', fn),
     onLong: fn => on('long', fn),
-    onLongEnd: fn => on('longEnd', fn),
-    save, load, clear,
+    save,
+    load,
+    clear,
     isR1: () => !!window.creationStorage || typeof window.PluginMessageHandler !== 'undefined'
   };
 })();
