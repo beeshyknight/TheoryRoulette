@@ -1,7 +1,17 @@
-Theory Roulette r1 v1.2
-100 cards
-40 practice cases
-16 wildcards
-16 case modifiers
-Flat project structure: no nested runtime resource paths
-R1 bridge based directly on the known-working Theory Lab r1 bridge
+THEORY ROULETTE 2 VALIDATION
+============================
+
+Target viewport: 240 × 282
+Cards: 150
+Informing theories/frameworks: 103
+Intervention/practice cards: 47
+Cards with six relationship links: 150
+Practice case archetypes: 8
+Word Hunt seed prompts: 15
+Wildcards: 16
+Starter cards: 12
+Active deck capacity: 12
+Persistent storage: yes
+External runtime assets: none
+External fonts: none
+External APIs required: none

@@ -1,30 +1,25 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=240, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#07101c" />
-  <meta name="description" content="Theory Roulette r1: theory and intervention card game for health and social care education." />
-  <title>Theory Roulette r1</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=240, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#07101c">
+  <meta name="description" content="Theory Roulette v2 for rabbit r1 — learn, collect, connect and apply theory in health and social care.">
+  <title>Theory Roulette v2</title>
   <style>
     html,body{margin:0;width:240px;height:282px;overflow:hidden;background:#07101c;color:#fff;font-family:Arial,Helvetica,sans-serif}
     #app{width:240px;height:282px;background:#07101c}
-    .boot-fallback{height:282px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;background:linear-gradient(160deg,#101a38,#07101c 58%,#112423)}
-    .boot-logo{width:70px;height:88px;border:2px solid #8d73ff;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#5142b8,#27245a);font-weight:900;font-size:22px;transform:rotate(-5deg);box-shadow:18px 8px 0 -3px #9a5725,18px 8px 0 -1px #ff9b42}
-    .boot-fallback strong{font-size:15px;letter-spacing:.07em}.boot-fallback span{font-size:9px;color:#9cadc1}
+    .boot{height:282px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;background:linear-gradient(155deg,#151b43,#07101c 58%,#0b2928)}
+    .boot-card{width:66px;height:86px;border:2px solid #a78bfa;border-radius:12px;background:linear-gradient(145deg,#5948c5,#24245a);display:grid;place-items:center;font-size:23px;font-weight:900;transform:rotate(-6deg);box-shadow:17px 8px 0 -2px #a95c22,17px 8px 0 0 #ff9f43}
+    .boot b{font-size:14px;letter-spacing:.08em}.boot span{font-size:8px;color:#aebbc9}
   </style>
-  <link rel="stylesheet" href="./r1.css" />
+  <link rel="stylesheet" href="./r1.css">
 </head>
 <body>
-  <main id="app" aria-live="polite">
-    <section class="boot-fallback">
-      <div class="boot-logo">TR</div>
-      <strong>THEORY ROULETTE</strong>
-      <span>Loading 100 cards…</span>
-    </section>
-  </main>
-  <noscript>Theory Roulette needs JavaScript enabled.</noscript>
-  <script src="./r1-bridge.js"></script>
-  <script type="module" src="./r1-app.js"></script>
+<main id="app" aria-live="polite">
+  <section class="boot"><div class="boot-card">TR</div><b>THEORY ROULETTE 2</b><span>Learn · Build · Apply</span></section>
+</main>
+<script src="./r1-bridge.js"></script>
+<script type="module" src="./r1-app.js"></script>
 </body>
 </html>

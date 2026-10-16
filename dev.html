@@ -1,1 +1,24 @@
-<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Theory Roulette R1 simulator</title><style>body{margin:0;background:#111;color:#fff;font-family:Arial;display:grid;place-items:center;min-height:100vh}.wrap{text-align:center}.device{width:240px;height:282px;border:12px solid #222;border-radius:28px;overflow:hidden;box-shadow:0 20px 60px #000}.device iframe{width:240px;height:282px;border:0}.controls{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}button{padding:8px 12px}</style></head><body><div class="wrap"><div class="device"><iframe id="r1" src="./index.html"></iframe></div><div class="controls"><button onclick="fire('scrollUp')">◀ wheel</button><button onclick="fire('sideClick')">button</button><button onclick="fire('scrollDown')">wheel ▶</button><button onclick="shake()">shake</button></div></div><script>function fire(n){document.getElementById('r1').contentWindow.dispatchEvent(new Event(n))}function shake(){document.getElementById('r1').contentWindow.dispatchEvent(new Event('shakeTheoryRoulette'))}</script></body></html>
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"><title>Theory Roulette 2 — R1 simulator</title>
+<style>
+body{margin:0;background:#181b22;color:#fff;font-family:Arial;display:flex;min-height:100vh;align-items:center;justify-content:center;gap:25px}
+iframe{width:240px;height:282px;border:10px solid #0a0d12;border-radius:17px;background:#07101c;box-shadow:0 20px 55px #0009}
+.controls{width:220px}.controls h1{font-size:20px}.controls p{font-size:12px;line-height:1.4;color:#b8c0ca}
+button{width:100%;margin:5px 0;padding:10px;border:0;border-radius:8px;background:#2a3340;color:white;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<iframe id="r1" src="./index.html"></iframe>
+<div class="controls"><h1>Theory Roulette 2</h1>
+<p>Serve this folder over HTTP. This simulator keeps the exact R1 viewport and sends the same events used by the wheel and side button.</p>
+<button onclick="emit('scrollUp')">Wheel up / left</button>
+<button onclick="emit('scrollDown')">Wheel down / right</button>
+<button onclick="emit('sideClick')">Side button</button>
+<button onclick="emit('longPressStart')">Hold / wildcard / back</button>
+<p>Keyboard inside the R1 view: arrows, Enter/Space and H.</p></div>
+<script>
+function emit(name){document.getElementById('r1').contentWindow.dispatchEvent(new Event(name))}
+</script>
+</body></html>

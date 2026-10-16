@@ -1,6 +1,6 @@
 window.R1Bridge = (() => {
   const listeners = { up: [], down: [], click: [], long: [] };
-  const KEY = 'theory_roulette_r1_v12';
+  const KEY = 'theory_roulette_r1_v2';
 
   const encode = (value) => {
     const json = JSON.stringify(value);
