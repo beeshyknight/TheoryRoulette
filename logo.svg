@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+<rect width="240" height="240" rx="52" fill="#090a0f"/>
+<g transform="translate(46 32)">
+<rect x="8" y="25" width="100" height="142" rx="18" fill="#7867ff" transform="rotate(-12 58 96)" opacity=".72"/>
+<rect x="42" y="20" width="100" height="142" rx="18" fill="#ff9f43" transform="rotate(11 92 91)" opacity=".82"/>
+<rect x="25" y="12" width="105" height="150" rx="19" fill="#f5f7fb"/>
+<circle cx="78" cy="78" r="32" fill="none" stroke="#11131b" stroke-width="9"/>
+<path d="M78 50a28 28 0 1 1-22 11" fill="none" stroke="#11131b" stroke-width="9" stroke-linecap="round"/>
+<path d="M48 57l11 3-4 11" fill="none" stroke="#11131b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="77" y="133" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="900" fill="#11131b">THEORY</text>
+</g>
+</svg>

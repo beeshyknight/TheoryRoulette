@@ -1,16 +1,705 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=240, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#090a0f" />
-  <title>Theory Roulette</title>
-  <link rel="icon" href="assets/theory-roulette-icon.svg" />
-  <link rel="stylesheet" href="css/styles.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=240, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#090a0f">
+<title>Theory Roulette — R1 Creation</title>
+<style>:root{
+  --bg:#090a0f;
+  --panel:#12141d;
+  --ink:#f5f7fb;
+  --muted:#a6adba;
+  --inform:#7867ff;
+  --intervene:#ff9f43;
+  --wild:#42d6b4;
+  --danger:#ff5b6e;
+  --line:rgba(255,255,255,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:240px;height:282px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{position:relative;user-select:none}
+button,input,textarea{font:inherit}
+#app{width:240px;height:282px;overflow:hidden;position:relative;background:
+  radial-gradient(circle at 25% -10%,rgba(120,103,255,.18),transparent 35%),
+  radial-gradient(circle at 110% 88%,rgba(255,159,67,.12),transparent 40%),#090a0f}
+.screen{position:absolute;inset:0;padding:8px 9px 9px;display:flex;flex-direction:column;animation:screenIn .18s ease-out}
+@keyframes screenIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.topbar{height:24px;display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.brand{font-size:10px;font-weight:900;letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spacer{flex:1}
+.pill{height:18px;display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:999px;padding:0 6px;background:rgba(255,255,255,.04);font-size:8px;font-weight:800;color:#dbe0ea}
+.pill strong{font-size:9px;color:#fff}
+.kicker{font-size:8px;font-weight:900;letter-spacing:1.1px;color:var(--muted);text-transform:uppercase}
+.title{font-size:23px;line-height:.98;font-weight:950;letter-spacing:-.7px;margin:5px 0 5px}
+.subtitle{font-size:10.5px;line-height:1.28;color:#c5cad4;margin:0}
+.hint{font-size:8px;line-height:1.2;color:#929aaa;text-align:center;margin-top:auto;padding-top:4px}
+.hint b{color:#fff}
+
+/* HOME */
+.hero-mark{width:54px;height:54px;margin:4px 0 1px;position:relative}
+.hero-mark .c{position:absolute;width:38px;height:50px;border-radius:7px;left:8px;top:1px;border:1px solid rgba(255,255,255,.25)}
+.hero-mark .c:nth-child(1){background:var(--inform);transform:rotate(-14deg) translateX(-5px);opacity:.7}
+.hero-mark .c:nth-child(2){background:var(--intervene);transform:rotate(13deg) translateX(6px);opacity:.8}
+.hero-mark .c:nth-child(3){background:#f4f5f8;display:grid;place-items:center;color:#12131a;font-size:23px;font-weight:950}
+.mode-rail{height:74px;position:relative;margin-top:7px;overflow:hidden}
+.mode-card{position:absolute;top:5px;left:50%;width:128px;height:62px;border:1px solid var(--line);border-radius:12px;background:#151821;padding:8px;transition:transform .16s ease,opacity .16s ease,filter .16s ease;transform:translateX(-50%)}
+.mode-card .mname{font-size:12px;font-weight:950;line-height:1}.mode-card .mdesc{font-size:8px;line-height:1.18;color:#aeb5c2;margin-top:5px}
+.mode-card.prev{transform:translateX(-152%) scale(.86) rotate(-5deg);opacity:.33}.mode-card.next{transform:translateX(52%) scale(.86) rotate(5deg);opacity:.33}.mode-card.far{opacity:0;pointer-events:none}
+.mode-card.current{box-shadow:0 8px 28px rgba(0,0,0,.35);border-color:rgba(255,255,255,.28)}
+
+/* DECK */
+.deck-zone{position:relative;height:185px;flex:0 0 185px;overflow:hidden;margin:1px -9px 0}
+.deck-card{position:absolute;width:138px;height:176px;left:51px;top:4px;border-radius:15px;border:1px solid rgba(255,255,255,.2);padding:10px;overflow:hidden;transform-origin:50% 100%;transition:transform .16s cubic-bezier(.2,.8,.2,1),opacity .16s ease,filter .16s ease;box-shadow:0 12px 26px rgba(0,0,0,.38)}
+.deck-card.inform{background:linear-gradient(150deg,#7666ff 0%,#493cc2 62%,#28233e 100%)}
+.deck-card.intervene{background:linear-gradient(150deg,#ffad58 0%,#cf6e21 62%,#3c2a20 100%)}
+.deck-card .cat{font-size:7px;font-weight:950;letter-spacing:1px;text-transform:uppercase;opacity:.84}
+.deck-card .num{position:absolute;right:10px;top:9px;font-size:8px;font-weight:900;opacity:.55}
+.deck-card .name{font-size:19px;line-height:.98;font-weight:950;letter-spacing:-.5px;margin-top:20px;overflow-wrap:anywhere}
+.deck-card .family{position:absolute;left:10px;bottom:10px;font-size:8px;font-weight:850;text-transform:uppercase;letter-spacing:.7px;background:rgba(0,0,0,.2);padding:4px 6px;border-radius:999px}
+.deck-card.pos-2{transform:translateX(-164px) scale(.77) rotate(-12deg);opacity:.24;filter:saturate(.55)}
+.deck-card.pos-1{transform:translateX(-90px) scale(.87) rotate(-7deg);opacity:.55;filter:saturate(.75)}
+.deck-card.pos0{transform:translateX(0) scale(1) rotate(0);opacity:1;z-index:4}
+.deck-card.pos1{transform:translateX(90px) scale(.87) rotate(7deg);opacity:.55;filter:saturate(.75)}
+.deck-card.pos2{transform:translateX(164px) scale(.77) rotate(12deg);opacity:.24;filter:saturate(.55)}
+.deck-card.fly-left{animation:flyLeft .48s cubic-bezier(.3,.7,.1,1) forwards}.deck-card.fly-right{animation:flyRight .48s cubic-bezier(.3,.7,.1,1) forwards}.deck-card.pick{animation:pickCard .48s cubic-bezier(.2,.9,.2,1) forwards;z-index:10}
+@keyframes flyLeft{to{transform:translate(-210px,32px) rotate(-38deg) scale(.7);opacity:0}}
+@keyframes flyRight{to{transform:translate(210px,32px) rotate(38deg) scale(.7);opacity:0}}
+@keyframes pickCard{55%{transform:translateY(-13px) scale(1.05)}to{transform:translateY(8px) scale(.9);opacity:0}}
+.deck-footer{display:flex;align-items:center;justify-content:center;gap:7px;height:32px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.legend-dot.i{background:var(--inform)}.legend-dot.a{background:var(--intervene)}
+
+/* CHALLENGE */
+.mini-card{height:39px;border-radius:10px;padding:7px 8px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.15);flex:0 0 auto}.mini-card.inform{background:linear-gradient(100deg,rgba(120,103,255,.34),rgba(120,103,255,.09))}.mini-card.intervene{background:linear-gradient(100deg,rgba(255,159,67,.34),rgba(255,159,67,.09))}
+.mini-icon{width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-size:13px;font-weight:950;background:rgba(255,255,255,.12)}
+.mini-copy{min-width:0}.mini-copy .mini-cat{font-size:6.5px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;color:#bec4d0}.mini-copy .mini-name{font-size:11px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:165px}
+.casebox{margin-top:6px;padding:8px 9px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.035);min-height:116px;overflow:hidden}.case-title{font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.65px;color:#fff;margin-bottom:5px}.case-text{font-size:10.5px;line-height:1.28;color:#d8dce5}.case-new{font-size:8.5px;line-height:1.23;color:#aeb7c7;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,.09)}
+.prompt-box{margin-top:6px;border-radius:11px;padding:8px 9px;background:#f2f3f5;color:#15161c;min-height:71px}.prompt-label{font-size:7px;font-weight:950;text-transform:uppercase;letter-spacing:.9px;color:#666d78}.prompt-text{font-size:12.2px;font-weight:850;line-height:1.16;margin-top:3px}.speak-state{font-size:8px;font-weight:900;margin-top:6px;color:#303540;display:flex;align-items:center;gap:4px}.pulse{width:6px;height:6px;border-radius:50%;background:var(--danger)}.listening .pulse{animation:pulse .65s infinite alternate}@keyframes pulse{to{transform:scale(1.7);opacity:.45}}
+
+/* REVEAL */
+.reveal-grid{display:grid;grid-template-rows:1fr 1fr;gap:6px;min-height:183px;margin-top:5px}.reveal{border-radius:11px;padding:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);overflow:hidden}.reveal .rlabel{font-size:7px;font-weight:950;letter-spacing:.9px;text-transform:uppercase;margin-bottom:5px}.reveal .rtext{font-size:10.2px;line-height:1.25}.reveal.helps .rlabel{color:var(--wild)}.reveal.limits .rlabel{color:#ff8ea0}.transcript{font-size:8px;line-height:1.2;color:#9ea6b5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:2px 0 0}
+
+/* LINK */
+.link-prompt{font-size:10.7px;line-height:1.2;font-weight:850;margin:5px 2px 3px}.link-rail{position:relative;height:142px;overflow:hidden;margin:0 -9px}.link-card{position:absolute;width:128px;height:130px;left:56px;top:4px;border-radius:13px;padding:9px;border:1px solid rgba(255,255,255,.17);transition:transform .16s ease,opacity .16s ease;box-shadow:0 10px 23px rgba(0,0,0,.3)}.link-card.inform{background:#493dc2}.link-card.intervene{background:#c86e28}.link-card .lname{font-size:15px;line-height:1;font-weight:950;margin-top:17px}.link-card .lwhy{font-size:8px;line-height:1.2;margin-top:8px;color:rgba(255,255,255,.82)}.link-card.prev{transform:translateX(-126px) scale(.84) rotate(-7deg);opacity:.4}.link-card.next{transform:translateX(126px) scale(.84) rotate(7deg);opacity:.4}.link-card.far{opacity:0}.link-card.current{z-index:3}
+
+/* WILDCARD */
+.wild-overlay{position:absolute;inset:0;z-index:50;display:grid;place-items:center;background:rgba(3,5,9,.72);backdrop-filter:blur(5px);animation:wildIn .22s ease-out}@keyframes wildIn{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}.wild-card{width:204px;min-height:205px;border-radius:18px;background:linear-gradient(150deg,#49d9b8,#168a79 65%,#12302d);border:1px solid rgba(255,255,255,.35);padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.55);transform:rotate(-2deg)}.wild-icon{font-size:28px;font-weight:950}.wild-label{font-size:8px;font-weight:950;letter-spacing:1.2px;margin-top:8px}.wild-name{font-size:22px;line-height:.95;font-weight:950;margin-top:3px}.wild-prompt{font-size:12px;line-height:1.22;font-weight:750;margin-top:14px}.wild-bonus{font-size:8px;font-weight:900;margin-top:14px;color:#d4fff6}
+
+/* RESULTS */
+.scoreburst{text-align:center;margin:8px 0 5px}.scoreburst .big{font-size:42px;line-height:.9;font-weight:1000;letter-spacing:-2px}.scoreburst .small{font-size:8px;font-weight:900;letter-spacing:1.1px;color:#aab1bf}.combo{margin:8px auto 0;border:1px solid var(--line);border-radius:12px;padding:8px 10px;width:205px;background:rgba(255,255,255,.035)}.combo .pair{font-size:10px;font-weight:950;line-height:1.2}.combo .why{font-size:8.5px;line-height:1.22;color:#adb5c4;margin-top:4px}.progressbar{height:5px;border-radius:999px;background:#20232d;overflow:hidden;margin-top:8px}.progressbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--inform),var(--wild));border-radius:inherit}.run-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.stat{padding:8px 5px;border:1px solid var(--line);border-radius:10px;text-align:center;background:rgba(255,255,255,.035)}.stat b{font-size:17px;display:block}.stat span{font-size:7px;color:#a9b0bc;font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+
+/* Browser-only touch helpers */
+.touchbar{position:absolute;bottom:7px;left:8px;right:8px;height:38px;display:none;gap:5px;z-index:20}.touchbar button{flex:1;border:1px solid var(--line);border-radius:9px;background:#171a23;color:#fff;font-size:9px;font-weight:850}.browser .touchbar{display:flex}.browser .hint{padding-bottom:39px}
+.casebox-large{min-height:175px;padding:11px 10px}.casebox-large .case-title{font-size:10px;margin-bottom:8px}.casebox-large .case-text{font-size:11.2px;line-height:1.32}.casebox-large .case-new{font-size:9.2px;line-height:1.26;margin-top:8px;padding-top:7px}
+.reflection-space{margin-top:8px;padding:10px 3px 4px;min-height:125px}.reflection-question{font-size:20px;line-height:1.03;font-weight:950;letter-spacing:-.45px;margin-top:7px}.reflection-nudge{font-size:9px;line-height:1.25;color:#aeb6c4;margin-top:10px}.reflection-transcript{margin-top:7px;color:#3c424e}.reveal-grid{min-height:172px}
+.reflection-space{min-height:108px;margin-top:5px;padding-top:7px}.reflection-nudge{font-size:8.5px;margin-top:7px}.reflection-prompt{min-height:49px;padding:7px 9px}.reflection-prompt .speak-state{margin-top:1px}.reflection-prompt .reflection-transcript{margin-top:5px}
+
+/* FIXED BUILD: visible bootstrap + card artwork */
+#app:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:16px 16px}
+.deck-card:after{content:"";position:absolute;right:-12px;bottom:-14px;width:88px;height:88px;border-radius:50%;border:14px solid rgba(255,255,255,.07);box-shadow:0 0 0 8px rgba(255,255,255,.025)}
+.deck-card.inform:before{content:"?";position:absolute;right:15px;bottom:16px;font-size:50px;line-height:1;font-weight:900;color:rgba(255,255,255,.10);transform:rotate(8deg)}
+.deck-card.intervene:before{content:"→";position:absolute;right:12px;bottom:14px;font-size:52px;line-height:1;font-weight:900;color:rgba(255,255,255,.11);transform:rotate(-8deg)}
+.home:after{content:"100 CARDS";position:absolute;right:10px;top:37px;font-size:7px;font-weight:900;letter-spacing:1px;color:rgba(255,255,255,.35);transform:rotate(90deg);transform-origin:100% 0}
+.startup-shell .mode-card.current{border-color:rgba(120,103,255,.7);box-shadow:0 9px 30px rgba(120,103,255,.16)}
+.startup-shell .bootstrap-note{font-size:7px;color:#6f7887;text-align:center;margin-top:auto}
+.startup-error{margin:auto 4px;text-align:center}.startup-error .error-mark{width:44px;height:44px;margin:0 auto 12px;border-radius:13px;display:grid;place-items:center;font-size:26px;font-weight:950;background:#ff5b6e;color:#0b0c10;transform:rotate(-6deg)}
+</style>
 </head>
 <body>
-  <main id="app" aria-live="polite"></main>
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+<main id="app" aria-live="polite"><section class="screen home startup-shell">
+  <div class="topbar"><div class="brand">THEORY ROULETTE</div><div class="spacer"></div><div class="pill">100 <strong>CARDS</strong></div></div>
+  <div class="hero-mark" aria-hidden="true"><span class="c"></span><span class="c"></span><span class="c">↻</span></div>
+  <div class="title">SPIN.<br>THINK. LINK.</div>
+  <p class="subtitle">Theories that inform. Approaches that intervene. Draw one, use it on practice, then challenge it.</p>
+  <div class="mode-rail"><div class="mode-card current"><div class="mname">MIXED RUN</div><div class="mdesc">10 rounds. Informing theories and interventions in one deck.</div></div></div>
+  <div class="hint"><b>WHEEL</b> choose run · <b>BUTTON</b> start</div>
+  <div class="bootstrap-note">R1 CREATION · LOADING INTERACTION LAYER</div>
+</section></main>
+<noscript><style>.bootstrap-note{display:none}</style></noscript>
+<script>(function () {
+  const C = (id, name, type, family, summary, helps, limits) => ({ id, name, type, family, summary, helps, limits });
+
+  const cards = [
+    C(1,'Person-centred theory','inform','relationships','People are understood through their own experience, meaning and sense of self.','Brings the person’s priorities, feelings and interpretation into the centre of the situation.','Can underplay structural inequality, material conditions and organisational power if used alone.'),
+    C(2,'Relationship-centred practice','inform','relationships','Care is shaped by the quality and reciprocity of relationships around a person.','Helps notice trust, reciprocity, emotional labour and how staff–person relationships affect outcomes.','May not fully explain wider economic, legal or institutional forces.'),
+    C(3,'Attachment theory','inform','development','Early and later attachment experiences can influence expectations of safety, care and relationships.','Offers a way to think about proximity, trust, separation, rejection and relationship patterns.','Can become deterministic or pathologising if culture, trauma, disability and current context are ignored.'),
+    C(4,'Social learning theory','inform','behaviour','People learn through observing others, consequences and social reinforcement.','Helps identify role models, reinforcement, group norms and learned patterns of behaviour.','Does not fully explain emotion, meaning, identity or structural constraints.'),
+    C(5,'Ecological systems theory','inform','systems','People develop within interacting layers such as family, community, services and wider society.','Encourages movement beyond the individual to relationships, services, community and policy.','Can map complexity without telling you which influence matters most or what to do next.'),
+    C(6,'General systems theory','inform','systems','A person or service is part of interconnected systems where change in one area affects others.','Helps trace feedback loops, interdependence and unintended consequences across a network.','Can feel abstract and may flatten differences in power between parts of the system.'),
+    C(7,'Family systems theory','inform','relationships','Family patterns are relational and circular rather than caused by one individual alone.','Helps explore roles, boundaries, alliances, communication and repeated interaction patterns.','Can inadvertently distribute responsibility away from abuse, coercion or structural disadvantage.'),
+    C(8,'Biopsychosocial model','inform','person','Health and behaviour emerge through biological, psychological and social influences.','Prompts a broad formulation rather than assuming one cause.','Can become a checklist and still neglect culture, power, rights and material inequality.'),
+    C(9,'Social model of disability','inform','critical','Disability is produced through social and environmental barriers as well as impairment.','Shifts attention towards inaccessible environments, attitudes, systems and reasonable adjustments.','May not by itself capture pain, fatigue or other embodied effects of impairment.'),
+    C(10,'Human rights model of disability','inform','critical','Disabled people are rights-holders entitled to participation, equality and dignity.','Helps frame decisions around rights, autonomy, participation and removal of discriminatory barriers.','Rights can conflict in practice and require careful application rather than slogans.'),
+    C(11,'Critical disability theory','inform','critical','Disability is shaped by power, norms, institutions and ideas about whose bodies and minds are valued.','Helps question ableism, normality, professional authority and institutional assumptions.','May offer critique more readily than a specific practical intervention.'),
+    C(12,'Social constructionism','inform','society','Meanings and categories are produced through language, culture and social interaction.','Helps ask how ideas such as risk, dependence, capacity or normality are being constructed.','Material realities can be overlooked if everything is treated mainly as discourse.'),
+    C(13,'Symbolic interactionism','inform','society','People act according to meanings developed through social interaction.','Helps explore identity, everyday encounters and how people interpret each other’s behaviour.','Often focuses on micro-interactions and can miss broader structures.'),
+    C(14,'Labelling theory','inform','society','Labels can alter how others respond and how a person comes to be understood.','Helps notice diagnostic, behavioural or service labels and the expectations attached to them.','Labels can also provide recognition, rights or access to support, so effects are not always negative.'),
+    C(15,'Stigma theory','inform','society','Stigma marks some identities or characteristics as socially devalued.','Helps examine concealment, shame, exclusion, discrimination and anticipated judgement.','Does not automatically explain the person’s own meaning or resilience.'),
+    C(16,'Intersectionality','inform','critical','People experience overlapping systems of advantage and disadvantage rather than single identities in isolation.','Helps consider how disability, race, class, gender, sexuality, age and other positions interact.','Can become tokenistic if reduced to listing identities without analysing power.'),
+    C(17,'Social determinants of health','inform','systems','Health is strongly shaped by income, housing, education, work, environment and social conditions.','Moves analysis beyond individual behaviour towards material and social conditions.','Broad population patterns do not explain every individual experience.'),
+    C(18,'Life course theory','inform','development','Experiences accumulate and interact across a person’s life and transitions.','Helps connect current circumstances with earlier transitions, opportunities and cumulative disadvantage.','Can tempt practitioners to over-read the past and under-value present choice.'),
+    C(19,'Salutogenesis','inform','person','Health can be understood through resources that support coherence, manageability and meaning.','Helps identify what enables coping, meaning and movement towards wellbeing.','May underplay severe adversity or suggest people should simply become more resilient.'),
+    C(20,'Stress–vulnerability model','inform','person','Difficulties can emerge when vulnerability and stress exceed available protective factors.','Helps organise stressors, strengths, triggers and protective factors without assuming a single cause.','The language of vulnerability can become individualising if environmental stress is neglected.'),
+    C(21,'Trauma theory','inform','person','Traumatic experiences can shape threat perception, emotion, memory, relationships and bodily responses.','Helps reinterpret some behaviour as adaptation to threat rather than deliberate non-compliance.','Not every difficulty is trauma-related; over-application can obscure other explanations.'),
+    C(22,'Cumulative disadvantage','inform','systems','Small inequalities can build across time and institutions, creating widening disadvantage.','Helps connect repeated barriers, missed opportunities and service exclusions over time.','Can make trajectories appear inevitable when change remains possible.'),
+    C(23,'Resilience theory','inform','person','People draw on personal, relational and community resources when facing adversity.','Helps identify protective relationships, coping resources and opportunities for recovery.','Can shift responsibility onto individuals if structural causes are ignored.'),
+    C(24,'Strengths perspective','inform','person','Practice begins with capabilities, resources, hopes and relationships rather than deficits alone.','Helps balance risk and need with what is working and what matters to the person.','Positivity can become superficial if harm, inequality or serious risk are minimised.'),
+    C(25,'Recovery model','inform','person','Recovery concerns living a meaningful life on one’s own terms, not simply symptom removal.','Helps focus on identity, hope, control, opportunity and personally defined outcomes.','Can be co-opted into service targets or unrealistic expectations of independence.'),
+    C(26,'Self-determination theory','inform','motivation','Motivation is supported by autonomy, competence and relatedness.','Helps ask whether the environment supports choice, mastery and belonging.','Does not remove material constraints or explain all forms of motivation.'),
+    C(27,'Learned helplessness','inform','motivation','Repeated experiences of having little control can reduce future attempts to act.','Helps notice how repeated exclusion or over-control may affect initiative and confidence.','Can wrongly locate the problem in the person instead of the controlling environment.'),
+    C(28,'Maslow’s hierarchy of needs','inform','motivation','Human needs are often described from basic survival and safety through belonging, esteem and fulfilment.','Provides a simple prompt to consider unmet needs across several domains.','Needs do not occur in a fixed universal hierarchy and the model has cultural limitations.'),
+    C(29,'Erikson’s psychosocial theory','inform','development','Development involves recurring psychosocial tensions across the lifespan.','Can prompt thinking about identity, intimacy, contribution and transitions.','Stage models can oversimplify diverse lives and should not be treated as fixed norms.'),
+    C(30,'Piaget’s cognitive development','inform','development','Cognitive development was described as changing through qualitatively different stages.','Can prompt consideration of how someone understands concepts and information.','The stage model is contested and should never be used to underestimate an individual’s ability.'),
+    C(31,'Vygotsky’s sociocultural theory','inform','learning','Learning develops through social interaction, language, culture and supported participation.','Highlights scaffolding, communication partners and the social environment of learning.','Requires careful individualisation; support can become over-directive.'),
+    C(32,'Kolb’s experiential learning','inform','learning','Learning can move through experience, reflection, conceptualisation and experimentation.','Helps turn practice experiences into a structured cycle of learning.','Real learning is not always neat or cyclical, and reflection may require support.'),
+    C(33,'Schön’s reflective practice','inform','learning','Professionals learn by reflecting during and after uncertain practice situations.','Helps examine tacit judgement, uncertainty and how decisions develop in action.','Reflection alone does not guarantee change and can ignore organisational constraints.'),
+    C(34,'Communities of practice','inform','learning','Learning happens through participation in groups that share practice, language and routines.','Helps explain professional culture, belonging and informal learning in teams.','Communities can reproduce poor practice, exclusion or dominant norms.'),
+    C(35,'Situated learning','inform','learning','Knowledge is shaped by the social and practical context in which it is used.','Helps explain why knowing something in a classroom may differ from using it in practice.','Can understate transferable knowledge or individual cognition.'),
+    C(36,'Transformative learning','inform','learning','Learning can involve questioning taken-for-granted assumptions and changing frames of reference.','Helps explore moments where discomfort or contradiction alters professional thinking.','Not all learning needs dramatic transformation, and power within education still matters.'),
+    C(37,'Andragogy','inform','learning','Adult learning is often strengthened by relevance, experience, self-direction and problem-centred learning.','Helps design learning around real practice and prior experience.','Adults vary greatly; the assumptions should not be treated as universal.'),
+    C(38,'Cognitive theory','inform','behaviour','Thoughts, beliefs, attention and interpretation influence emotion and behaviour.','Helps identify appraisals, assumptions and thinking patterns linked with distress or action.','Can over-focus on internal thinking when external circumstances are genuinely harmful.'),
+    C(39,'Behaviourism','inform','behaviour','Behaviour is influenced by antecedents, consequences and reinforcement.','Helps examine what happens before and after behaviour and what may maintain it.','Meaning, communication, trauma and rights can be lost if behaviour is treated mechanically.'),
+    C(40,'Psychodynamic theory','inform','relationships','Current feelings and relationships may be influenced by unconscious processes and earlier relational experiences.','Offers ways to think about defence, transference, emotional patterns and relational repetition.','Interpretation can become speculative and overly expert-led.'),
+    C(41,'Cognitive dissonance','inform','behaviour','People experience tension when beliefs, values and actions conflict.','Helps understand defensiveness, justification and resistance when practice challenges identity or values.','Not all inconsistency reflects dissonance; practical constraints may be more important.'),
+    C(42,'Attribution theory','inform','behaviour','People explain behaviour by attributing it to personal qualities or situations.','Helps challenge assumptions such as “difficult person” when context may better explain behaviour.','Attribution patterns are only one part of judgement and decision-making.'),
+    C(43,'Theory of planned behaviour','inform','motivation','Intentions are influenced by attitudes, perceived social norms and perceived control.','Helps analyse why someone may intend to act but still feel unable or unsupported.','Intentions do not always predict behaviour, especially under poverty, crisis or coercion.'),
+    C(44,'Health belief model','inform','motivation','Health action is influenced by perceived risk, severity, benefits, barriers and cues to act.','Helps organise beliefs that may influence engagement with treatment or prevention.','Can individualise behaviour and underplay trust, access and social conditions.'),
+    C(45,'Transtheoretical model','inform','motivation','Change is often described through shifting readiness rather than a single decision.','Helps tailor conversations to readiness rather than assuming everyone is ready for action.','Stages can oversimplify change and people may move in less orderly ways.'),
+    C(46,'COM-B','inform','motivation','Behaviour depends on capability, opportunity and motivation.','Provides a practical way to ask what needs to change around the person as well as within them.','Its simplicity can hide complexity unless each component is explored carefully.'),
+    C(47,'Capability approach','inform','critical','Wellbeing concerns the real freedoms people have to be and do what they value.','Helps distinguish formal choice from genuine opportunity and access.','Capabilities can be difficult to define and measure without the person’s voice.'),
+    C(48,'Social role valorisation','inform','critical','Socially valued roles and images can influence opportunity, status and inclusion.','Helps notice how services may restrict ordinary roles, relationships and community participation.','The idea of “valued” roles can itself reflect dominant social norms.'),
+    C(49,'Normalisation principle','inform','critical','People should have access to ordinary patterns and conditions of everyday life.','Helps challenge institutional routines and unnecessary segregation.','“Normal” can become prescriptive; people should not have to conform to deserve inclusion.'),
+    C(50,'Power/knowledge','inform','critical','What counts as truth is connected with power, institutions and professional ways of knowing.','Helps question whose account becomes the official version and how records shape later decisions.','The lens can feel abstract and may not directly guide immediate action.'),
+    C(51,'Feminist theory','inform','critical','Gendered power, social roles and inequality shape experience and institutions.','Helps examine care work, violence, economic inequality and whose knowledge is legitimised.','Different feminist traditions disagree, and gender must be considered alongside other inequalities.'),
+    C(52,'Critical race theory','inform','critical','Racism can be structural and embedded in institutions, not only individual prejudice.','Helps examine patterns, policy, institutional practice and whose experiences are centred.','It requires contextual application and should not reduce people to racial categories.'),
+    C(53,'Queer theory','inform','critical','Categories of gender and sexuality are socially regulated and can be questioned rather than treated as fixed norms.','Helps notice heteronormativity, assumptions about family and pressures to fit normative identities.','Its conceptual language can be difficult to translate into immediate practice without care.'),
+    C(54,'Organisational culture theory','inform','systems','Shared assumptions, norms and routines shape how organisations behave.','Helps explain why policy and actual practice may differ within a service.','Culture can become a vague explanation unless linked to concrete behaviours and structures.'),
+    C(55,'Moral distress','inform','systems','Professionals can experience distress when they believe they know the right action but feel constrained from taking it.','Helps explore conflict between values, resources, rules, hierarchy and professional responsibility.','Focusing on staff distress should not eclipse the impact on people using services.'),
+
+    C(56,'Motivational interviewing','intervene','communication','A collaborative conversational approach that explores ambivalence and supports a person’s own reasons for change.','Use open questions, reflections and autonomy-supportive language rather than persuasion.','It is not a technique for making someone agree with a professional goal.'),
+    C(57,'Solution-focused brief therapy','intervene','communication','Focuses on preferred futures, exceptions, resources and small achievable change.','Ask what is already working, what would be different and what small next step matters.','Can feel invalidating if serious harm, trauma or structural barriers are rushed past.'),
+    C(58,'CBT-informed practice','intervene','therapeutic','Links thoughts, emotions, behaviour and situations to identify possible changes.','Collaboratively map patterns and test practical coping strategies.','Should not reframe genuine injustice or inaccessible environments as faulty thinking.'),
+    C(59,'Behavioural activation','intervene','therapeutic','Supports gradual re-engagement with meaningful and reinforcing activity.','Plan manageable activity linked to values, routine and feedback.','Barriers such as fatigue, poverty, access or coercive environments need addressing too.'),
+    C(60,'Positive behaviour support','intervene','support','Uses person-centred assessment and environmental change to improve quality of life and reduce behaviours of concern.','Understand function, communication and context, then change support and environments proactively.','It can become behaviour-control if quality of life, rights and co-production are not central.'),
+    C(61,'Active Support','intervene','support','Enables people with learning disabilities to participate meaningfully in everyday activities and relationships.','Break activities into accessible opportunities and offer just enough assistance.','Participation should remain chosen and meaningful, not become constant staff-led activity.'),
+    C(62,'Trauma-informed practice','intervene','support','Organises support around safety, trust, choice, collaboration and avoiding re-traumatisation.','Adapt environments, communication and relationships to reduce threat and increase control.','It should not assume trauma without evidence or replace specialist trauma treatment when needed.'),
+    C(63,'Strengths-based practice','intervene','support','Works with abilities, relationships, community resources and aspirations alongside needs and risks.','Ask what matters, what works, who is supportive and what resources can be mobilised.','Strengths language must not disguise unmet need or withdrawal of services.'),
+    C(64,'Task-centred practice','intervene','planning','Uses agreed, concrete and time-limited tasks to address priority problems.','Break a broad concern into collaborative, reviewable steps.','May be too narrow when difficulties are relational, traumatic or structurally produced.'),
+    C(65,'Crisis intervention','intervene','safety','Prioritises immediate safety, stabilisation, practical support and short-term coping during crisis.','Reduce immediate danger, clarify priorities and connect the person with appropriate support.','Crisis responses can become restrictive if they do not return to rights and longer-term goals.'),
+    C(66,'Harm reduction','intervene','safety','Seeks to reduce harms even when a person does not want or cannot achieve complete cessation of a risky behaviour.','Work pragmatically on safer choices, information, equipment and access to support.','Can be misunderstood as endorsing harm and still requires attention to safeguarding and capacity.'),
+    C(67,'Relapse prevention','intervene','planning','Identifies triggers, early warning signs, coping strategies and support for maintaining change.','Develop a plan around patterns, high-risk situations and what helps when difficulties return.','The language of relapse may not fit all experiences and should not imply moral failure.'),
+    C(68,'Shared decision-making','intervene','rights','Professionals and people combine evidence with the person’s preferences, circumstances and goals.','Present meaningful options, explore what matters and reach decisions together.','Choice is not meaningful if options are inaccessible or power differences remain unaddressed.'),
+    C(69,'Supported decision-making','intervene','rights','Provides communication and relational support so a person can make or express their own decisions wherever possible.','Adjust information, time, environment and trusted support before concluding a person cannot decide.','Support must not become subtle substitution of another person’s preference.'),
+    C(70,'De-escalation','intervene','safety','Uses calm communication, space, validation and environmental adjustment to reduce escalating distress or conflict.','Slow the interaction, reduce threat and preserve dignity while assessing immediate risk.','De-escalation is not simply compliance-seeking and may fail if underlying causes remain unchanged.'),
+    C(71,'Restorative practice','intervene','relationships','Focuses on harm, relationships, accountability and what is needed to repair or move forward.','Bring affected people into a structured process that explores impact and agreed repair.','It may be inappropriate where power imbalance, coercion or ongoing abuse makes participation unsafe.'),
+    C(72,'Family group conferencing','intervene','relationships','Brings family and network members together to develop their own plan around a concern.','Widen participation and use family knowledge while keeping clear safeguarding boundaries.','Family networks can include conflict, exclusion or unsafe power dynamics.'),
+    C(73,'Independent advocacy','intervene','rights','Supports a person to understand options, express views and have those views represented independently.','Use advocacy when communication, power imbalance or conflict may prevent the person being heard.','Advocacy should amplify the person’s voice rather than replace it.'),
+    C(74,'Co-production','intervene','rights','People with lived experience share power in designing, delivering and evaluating decisions or services.','Create structures where people can genuinely influence priorities, resources and outcomes.','Inviting feedback after decisions are made is consultation, not co-production.'),
+    C(75,'Person-centred planning','intervene','planning','Builds support around the person’s life, relationships, preferences, aspirations and chosen outcomes.','Start with what matters to the person and translate this into coordinated practical support.','Plans can become paperwork if the person has little influence over actual decisions.'),
+    C(76,'Recovery planning','intervene','planning','Supports personally defined recovery goals, hope, identity and self-management.','Agree meaningful goals, preferred support and strategies that strengthen control and opportunity.','Recovery language should not become pressure to reduce support prematurely.'),
+    C(77,'Care coordination','intervene','systems','Coordinates people, information and services around agreed needs and outcomes.','Clarify roles, avoid duplication and make transitions between services more coherent.','Coordination can become professional-centred if the person is not an active partner.'),
+    C(78,'Case management','intervene','systems','Combines assessment, planning, coordination, monitoring and review across complex needs.','Maintain continuity across fragmented services and track whether agreed support happens.','Can become bureaucratic gatekeeping if relationships and rights are secondary.'),
+    C(79,'Safeguarding planning','intervene','safety','Develops proportionate action to reduce abuse, neglect or exploitation while considering the person’s wishes and rights.','Clarify risks, desired outcomes, legal duties and who will do what next.','Over-protection can itself cause harm by restricting autonomy and relationships.'),
+    C(80,'Risk formulation','intervene','safety','Synthesises risk factors, triggers, protective factors, context and likely future scenarios.','Move beyond a risk list to an explanation of how and when harm may occur and what could reduce it.','A formulation is provisional and must be revised when new information appears.'),
+    C(81,'Safety planning','intervene','safety','Creates a practical, personalised plan for recognising danger and accessing support.','Agree warning signs, immediate actions, trusted contacts and environmental changes.','Plans are ineffective if they are inaccessible, unrealistic or not rehearsed.'),
+    C(82,'Reasonable adjustments','intervene','access','Changes usual processes so disabled people can access services more equitably.','Adapt communication, appointments, environments, time, procedures or support to remove barriers.','Adjustments must be individual; generic “easy read” alone may not make something accessible.'),
+    C(83,'Communication passport','intervene','access','Records how a person communicates, understands information and prefers others to support communication.','Give unfamiliar staff a concise, practical guide to communication and support.','A passport can become outdated or replace direct communication with the person.'),
+    C(84,'Social prescribing','intervene','community','Connects people with non-clinical community resources that may support wellbeing and participation.','Link interests and goals with community groups, practical support and meaningful activity.','Referral alone does not remove cost, transport, accessibility or confidence barriers.'),
+    C(85,'Occupational approaches','intervene','support','Use meaningful activity and environmental adaptation to support participation and wellbeing.','Explore what the person needs or wants to do, then adapt task, environment or support.','Activity should not be prescribed without understanding meaning and choice.'),
+    C(86,'Sensory-informed support','intervene','access','Adapts environments and routines in response to sensory preferences and sensitivities.','Reduce avoidable sensory load and create predictable, tolerable environments.','Sensory explanations should not eclipse pain, trauma, communication or other causes of distress.'),
+    C(87,'Graded exposure','intervene','therapeutic','Supports gradual, planned contact with feared situations while building coping and learning.','Co-produce small steps and review learning rather than forcing rapid exposure.','Can be harmful if used without consent, readiness or understanding of trauma.'),
+    C(88,'Psychoeducation','intervene','communication','Provides accessible information that helps people understand experiences, options and self-management.','Translate evidence into understandable, relevant information and check understanding.','Information alone rarely changes behaviour and can become one-way professional instruction.'),
+    C(89,'Peer support','intervene','relationships','People with relevant lived experience support one another through shared understanding and mutuality.','Create connection, hope and practical knowledge outside purely professional relationships.','Peer roles need boundaries, support and recognition; shared experience is not automatically identical experience.'),
+    C(90,'Community development','intervene','community','Works collectively with communities to identify priorities, build capacity and influence conditions.','Shift from individual referral towards collective action and local participation.','Longer-term community work may not address an urgent individual need immediately.'),
+    C(91,'Asset-based community development','intervene','community','Starts with community strengths, networks, associations and local assets rather than deficits alone.','Map local capabilities and connect people in ways that build reciprocal community participation.','Asset language can obscure under-investment or structural deprivation if used uncritically.'),
+    C(92,'Narrative practice','intervene','therapeutic','Separates people from problems and explores alternative stories, identities and meanings.','Use language to externalise problems and strengthen preferred accounts of identity.','Narrative work may be inaccessible without communication adaptation and should not minimise material realities.'),
+    C(93,'Systemic family work','intervene','relationships','Works with interaction patterns and relationships across a family or network.','Explore circular patterns, perspectives and changes that alter the wider relational system.','Requires care where abuse, coercive control or unequal power make joint work unsafe.'),
+    C(94,'Reflective supervision','intervene','workforce','Creates structured space to think about practice, emotion, judgement, ethics and uncertainty.','Use supervision to examine assumptions, emotional impact and alternative formulations.','Reflection has limited value if organisational conditions make change impossible.'),
+    C(95,'Appreciative inquiry','intervene','workforce','Uses questions about strengths and successful practice to generate possibilities for improvement.','Identify when things work well and build from those conditions.','A strengths focus can silence legitimate concerns if problems and inequalities are avoided.'),
+    C(96,'Plan–Do–Study–Act','intervene','quality','Tests small service changes iteratively and learns from what happens.','Make a focused change, study the effect and adapt before wider implementation.','Fast cycles are not a substitute for robust evaluation or meaningful co-production.'),
+    C(97,'Quality improvement','intervene','quality','Uses systematic methods to improve safety, experience, effectiveness or equity in services.','Define a problem, understand the system, measure change and involve those affected.','Metrics can crowd out lived experience or incentivise what is easy to count.'),
+    C(98,'Implementation support','intervene','quality','Uses strategies that help evidence or new practice become embedded in real settings.','Identify barriers, champions, workflow changes, feedback and ongoing support.','Implementation can spread poor or inequitable practice if the intervention itself is not sound.'),
+    C(99,'Coaching leadership','intervene','workforce','Leadership supports others through questions, feedback, autonomy and development rather than command alone.','Use collaborative goals, reflection and feedback to build capability and ownership.','Coaching is not enough where accountability, unsafe practice or structural change is required.'),
+    C(100,'Teach-back and supported communication','intervene','access','Checks understanding by inviting the person to explain information in their own words, with communication support.','Use accessible language, visual support and teach-back to identify what needs explaining differently.','It must not become a test of the person; misunderstanding is feedback about the communication.'),
+  ];
+
+  const wildcards = [
+    {name:'LIVED EXPERIENCE', prompt:'What might the person say is missing from your explanation?', icon:'✦'},
+    {name:'ENVIRONMENT', prompt:'What in the physical or social environment changes this situation?', icon:'⌂'},
+    {name:'POWER', prompt:'Who has power here, and how is it being used?', icon:'⚡'},
+    {name:'LAW', prompt:'What legal duties, rights or safeguards might matter?', icon:'§'},
+    {name:'ANOTHER PROFESSION', prompt:'Which other professional perspective could alter your formulation?', icon:'+'},
+    {name:'CULTURE', prompt:'What assumptions about culture, identity or family could you be making?', icon:'◉'},
+    {name:'COMMUNICATION', prompt:'How could communication be changing what you think you know?', icon:'…'},
+    {name:'INEQUALITY', prompt:'What material or structural inequality is shaping the options available?', icon:'↕'},
+    {name:'ETHICS', prompt:'Which values or ethical tensions are in conflict?', icon:'◇'},
+    {name:'TRAUMA', prompt:'Could threat, safety or earlier harm offer another explanation?', icon:'△'},
+    {name:'RELATIONSHIPS', prompt:'Which relationship is most influencing what happens next?', icon:'∞'},
+    {name:'ADJUSTMENTS', prompt:'What reasonable adjustment could change the outcome?', icon:'↔'},
+    {name:'STIGMA', prompt:'Is a label or stereotype influencing professional judgement?', icon:'◎'},
+    {name:'RESOURCES', prompt:'What changes when staffing, time, money or service availability are considered?', icon:'▦'},
+    {name:'UNCERTAINTY', prompt:'What do you still not know, and how much uncertainty can you safely tolerate?', icon:'?'},
+    {name:'CO-PRODUCTION', prompt:'Where could the person genuinely influence the decision rather than just be consulted?', icon:'✚'}
+  ];
+
+  const cases = [
+    {title:'Missed appointments', text:'A 24-year-old has missed three diabetes appointments. Notes describe them as “non-compliant”. They say letters are confusing and the bus journey involves two changes.', tags:['access','motivation','critical','systems']},
+    {title:'Night support', text:'A woman living in supported housing has started staying awake most nights. Staff want a stricter bedtime routine; she says nighttime is the only period when the house feels quiet.', tags:['support','relationships','behaviour','rights']},
+    {title:'Discharge pressure', text:'A ward is under pressure for beds. A man with a learning disability is medically fit, but his usual support package cannot restart until Monday. The team is considering discharge on Friday.', tags:['systems','rights','quality','safety']},
+    {title:'Family disagreement', text:'A young adult wants to attend a music festival with friends. Their parent says it is too risky and asks the social worker to stop it.', tags:['rights','relationships','risk','critical']},
+    {title:'Medication refusal', text:'A person in a residential service has begun refusing evening medication. Staff say this is “out of character”. He points to his stomach when the tablets are offered.', tags:['communication','access','person','safety']},
+    {title:'Team conflict', text:'Community nurses and social workers disagree about who should respond to a deteriorating home situation. Each service says the main issue sits outside its remit.', tags:['systems','workforce','quality','safety']},
+    {title:'Repeated falls', text:'An older woman has fallen four times in two months. Her daughter wants the rugs removed and a sensor installed. The woman says the rugs belonged to her late partner and refuses both changes.', tags:['rights','relationships','safety','person']},
+    {title:'College placement', text:'A student with autism is doing well academically but repeatedly leaves a noisy placement area. The placement educator describes this as poor resilience.', tags:['access','learning','critical','workforce']},
+    {title:'Alcohol and tenancy', text:'A tenant is drinking heavily and neighbours have complained about noise. Housing staff are considering enforcement. He says drinking became worse after his brother died.', tags:['trauma','community','safety','systems']},
+    {title:'Communication change', text:'A woman who usually uses a few spoken words has begun pushing staff away during personal care. Records say she is “challenging”, but no pain assessment has been completed.', tags:['communication','support','behaviour','safety']},
+    {title:'New diagnosis', text:'A teenager has recently received a diagnosis of epilepsy. Their parent is very anxious and has stopped them attending sports, although the young person wants to return.', tags:['relationships','rights','person','development']},
+    {title:'Home care timing', text:'A home-care visit is scheduled for 07:00 because it suits the rota. The person prefers to get up at 09:30 and has started refusing care.', tags:['systems','rights','support','quality']},
+    {title:'Online relationship', text:'A man with a mild learning disability has met someone online and wants to send them money for travel. Staff are worried about exploitation; he says they are interfering in his private life.', tags:['rights','safety','relationships','critical']},
+    {title:'Staffing shortage', text:'A supported living service has two vacancies and regular agency cover. Community activities have gradually stopped because staff say they cannot manage the risk.', tags:['systems','quality','rights','community']},
+    {title:'Self-injury', text:'A young woman in an inpatient unit hits her head during busy ward periods. PRN medication use has increased, but the pattern of noise and unfamiliar staff has not been explored.', tags:['behaviour','access','trauma','safety']},
+    {title:'Safeguarding concern', text:'A support worker notices unexplained bruising. The person gives different answers when asked and becomes quiet when a relative enters the room.', tags:['safety','communication','relationships','rights']},
+    {title:'Weight management', text:'A person has been referred to a weight-management service. The plan focuses on diet, but they live in temporary accommodation with no working cooker.', tags:['critical','systems','motivation','access']},
+    {title:'Return to work', text:'After a period of depression, an employee wants to return to work. Their manager is supportive but says the role cannot be changed because it would be unfair to colleagues.', tags:['rights','access','systems','motivation']},
+    {title:'Care home routine', text:'Residents are expected to eat dinner at 17:00 because the kitchen closes early. One resident repeatedly asks to eat later and is described as “demanding”.', tags:['rights','systems','relationships','quality']},
+    {title:'Transition to adult services', text:'A 17-year-old and family know the children’s team well. Adult services have sent forms but no named worker. The young person says nobody has explained what will change.', tags:['systems','development','communication','rights']},
+    {title:'Ward communication', text:'A patient who uses Makaton is admitted overnight. No communication profile is available and staff rely on a family member to interpret everything.', tags:['access','communication','systems','rights']},
+    {title:'Community access', text:'A man says he is lonely and wants to join a local gym. Staff repeatedly suggest disability-specific groups because they feel these would be safer.', tags:['community','critical','rights','support']},
+    {title:'Pain and behaviour', text:'A person with profound learning disabilities has stopped eating and cries when moved. Staff initially record “behavioural deterioration”.', tags:['communication','safety','behaviour','person']},
+    {title:'Professional boundaries', text:'A long-term support worker is the person’s main source of emotional support. A new manager says the relationship is “too close” and wants it reduced immediately.', tags:['relationships','workforce','rights','systems']},
+    {title:'Hospital passport', text:'A patient has an up-to-date hospital passport, but staff say there is no time to read it during a busy emergency department shift.', tags:['access','quality','systems','communication']},
+    {title:'Debt and choice', text:'A woman is behind on electricity payments but continues spending money on online games. Her brother wants to take over her bank card.', tags:['rights','motivation','relationships','safety']},
+    {title:'Seclusion review', text:'A person has had several periods of seclusion following aggression. Records describe incidents in detail but contain little about what happened beforehand.', tags:['safety','behaviour','trauma','quality']},
+    {title:'Carer exhaustion', text:'A parent providing most daily support says they are exhausted but refuses respite because previous services did not understand their son’s communication.', tags:['relationships','systems','communication','support']},
+    {title:'Delayed assessment', text:'A social care assessment has been delayed for months. The person’s family is filling gaps, but the arrangement is becoming unsafe.', tags:['systems','rights','safety','quality']},
+    {title:'Food refusal', text:'A child with sensory differences eats a very narrow range of foods. Professionals disagree whether the priority is nutrition, anxiety, sensory support or parenting.', tags:['access','relationships','development','systems']},
+    {title:'Smoking and oxygen', text:'A man receiving home oxygen continues to smoke indoors. He understands the fire risk but says smoking is one of the few things he still enjoys.', tags:['rights','safety','motivation','person']},
+    {title:'Incident report', text:'A serious incident report focuses on a staff member’s mistake. Several colleagues say the same shortcut had become normal because the service was understaffed.', tags:['systems','quality','workforce','safety']},
+    {title:'Refusing personal care', text:'A resident refuses personal care from unfamiliar agency staff. The service records several “care refusals” and is considering a behavioural plan.', tags:['relationships','rights','behaviour','support']},
+    {title:'Hearing voices', text:'A person says they hear a comforting voice of a deceased relative. One clinician sees this as a symptom; the person says it helps them cope with grief.', tags:['person','critical','relationships','therapeutic']},
+    {title:'Easy Read leaflet', text:'A service has converted its complaints leaflet into Easy Read, but people using the service still say they do not know how to complain safely.', tags:['access','rights','systems','communication']},
+    {title:'Sexual relationship', text:'Two adults in supported living say they are in a relationship. Staff are unsure how to support privacy, consent and shared time without becoming intrusive.', tags:['rights','relationships','critical','communication']},
+    {title:'Repeated admission', text:'A person returns to hospital several weeks after discharge. Each admission is treated as a new episode and nobody has reviewed the pattern across services.', tags:['systems','quality','safety','planning']},
+    {title:'Cultural assumption', text:'A clinician assumes a family will provide ongoing care because “that is normal in their culture”. The daughter says nobody has asked what she can realistically do.', tags:['critical','relationships','systems','rights']},
+    {title:'Drug use and pregnancy', text:'A pregnant woman uses opioids and avoids appointments after feeling judged at a previous service. Professionals are worried about both her wellbeing and the baby.', tags:['safety','trauma','motivation','relationships']},
+    {title:'School exclusion', text:'A pupil with additional needs has had several fixed-term exclusions after distress in lessons. The school focuses on behaviour; the family describes bullying and sensory overload.', tags:['development','behaviour','access','systems']}
+  ];
+
+  const modifiers = [
+    'New information: the person says previous professionals made decisions without them.',
+    'New information: a family member strongly disagrees with the current plan.',
+    'New information: the service has a six-week waiting list for the preferred support.',
+    'New information: records from another service describe the situation very differently.',
+    'New information: the person communicates more clearly when a trusted supporter is present.',
+    'New information: staffing has changed repeatedly over the last month.',
+    'New information: the person says cost is affecting what they can realistically do.',
+    'New information: an earlier incident was never reviewed with the person.',
+    'New information: the team is under pressure to close the case quickly.',
+    'New information: the person’s first language is not English and an interpreter has not yet been booked.',
+    'New information: a reasonable adjustment had previously worked but was quietly stopped.',
+    'New information: the person says the main professional concern is not their own priority.',
+    'New information: there is disagreement between two professionals about the level of risk.',
+    'New information: the person has recently experienced bereavement or another major loss.',
+    'New information: the environment becomes much busier at the time the problem usually occurs.',
+    'New information: a written care plan exists, but staff practice does not consistently match it.'
+  ];
+
+  window.THEORY_ROULETTE_DATA = { cards, wildcards, cases, modifiers };
+})();
+</script>
+<script>(function(){
+  'use strict';
+
+  const DATA = window.THEORY_ROULETTE_DATA;
+  const app = document.getElementById('app');
+  if(!DATA || !DATA.cards || !DATA.cards.length){
+    app.innerHTML='<section class="screen home"><div class="topbar"><div class="brand">THEORY ROULETTE</div></div><div class="startup-error"><div class="error-mark">!</div><div class="title">DECK COULD NOT LOAD</div><p class="subtitle">The Creation opened, but its card data did not initialise. Use the bundled index.html rather than moving files separately.</p></div></section>';
+    return;
+  }
+  const nativeR1 = typeof window.PluginMessageHandler !== 'undefined';
+  if (!nativeR1) document.documentElement.classList.add('browser');
+
+  const modes = [
+    {id:'mixed', name:'MIXED RUN', desc:'10 rounds. Informing theories and interventions in one deck.', rounds:10, filter:'all'},
+    {id:'inform', name:'THEORIES THAT INFORM', desc:'8 rounds. Build explanations before choosing action.', rounds:8, filter:'inform'},
+    {id:'intervene', name:'THEORIES THAT INTERVENE', desc:'8 rounds. Practice approaches, methods and responses.', rounds:8, filter:'intervene'},
+    {id:'quick', name:'QUICK DRAW', desc:'5 fast rounds when you only have a few minutes.', rounds:5, filter:'all'}
+  ];
+
+  const state = {
+    screen:'home', modeIndex:0, mode:null, round:0, score:0, chain:0,
+    deckIndex:0, used:[], card:null, caseItem:null, modifier:null,
+    transcript:'', isListening:false, speechSupported:false,
+    linkOptions:[], linkIndex:0, linkedCard:null, roundScore:0,
+    wildcard:null, wildcardUsed:false, preWildScreen:null,
+    aiFeedback:null, drawing:false, longPressActive:false,
+    progress:{xp:0,bestChain:0,seen:{},runs:0}
+  };
+
+  const familyTagMap = {
+    relationships:['relationships','communication'], development:['development'], behaviour:['behaviour','motivation'],
+    systems:['systems','quality'], person:['person','motivation'], critical:['critical','rights'], learning:['learning','workforce'],
+    motivation:['motivation','behaviour'], communication:['communication','relationships'], therapeutic:['person','behaviour'],
+    support:['support','access'], planning:['planning','systems'], safety:['safety'], rights:['rights','critical'],
+    access:['access','communication'], community:['community','systems'], workforce:['workforce','systems'], quality:['quality','systems']
+  };
+
+  function esc(s){return String(s == null ? '' : s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+  function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+  function wrapIndex(n,len){return ((n%len)+len)%len;}
+  function shuffled(arr){return arr.slice().sort(()=>Math.random()-.5);}
+  function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+  function pad3(n){n=String(n);while(n.length<3)n='0'+n;return n;}
+
+  async function storageGet(key){
+    try{
+      if((window.creationStorage && window.creationStorage.plain)){
+        const raw=await window.creationStorage.plain.getItem(key);
+        return raw ? JSON.parse(atob(raw)) : null;
+      }
+      const raw=localStorage.getItem('tr1_'+key); return raw?JSON.parse(raw):null;
+    }catch(e){return null;}
+  }
+  async function storageSet(key,val){
+    try{
+      if((window.creationStorage && window.creationStorage.plain)) await window.creationStorage.plain.setItem(key,btoa(JSON.stringify(val)));
+      else localStorage.setItem('tr1_'+key,JSON.stringify(val));
+    }catch(e){}
+  }
+  async function loadProgress(){
+    const p=await storageGet('progress_v1');
+    if(p && typeof p==='object') state.progress=Object.assign(state.progress,p);
+    render();
+  }
+  function saveProgress(){storageSet('progress_v1',state.progress);}
+
+  function topbar(label){
+    return `<div class="topbar"><div class="brand">${esc(label||'THEORY ROULETTE')}</div><div class="spacer"></div><div class="pill">XP <strong>${state.progress.xp+state.score}</strong></div><div class="pill">CHAIN <strong>${state.chain}</strong></div></div>`;
+  }
+
+  function currentDeck(){
+    let cards=DATA.cards.filter(c=>!state.used.includes(c.id));
+    if((state.mode && state.mode.filter)==='inform') cards=cards.filter(c=>c.type==='inform');
+    if((state.mode && state.mode.filter)==='intervene') cards=cards.filter(c=>c.type==='intervene');
+    if(!cards.length){
+      state.used=[];
+      cards=DATA.cards.filter(c=>(state.mode && state.mode.filter)==='all'||!state.mode||c.type===state.mode.filter);
+    }
+    return cards;
+  }
+
+  function cardHTML(card, cls=''){
+    return `<div class="deck-card ${card.type} ${cls}" data-id="${card.id}">
+      <div class="cat">${card.type==='inform'?'THEORY · INFORM':'APPROACH · INTERVENE'}</div><div class="num">#${pad3(card.id)}</div>
+      <div class="name">${esc(card.name)}</div><div class="family">${esc(card.family)}</div></div>`;
+  }
+
+  function renderHome(){
+    const modeEls=modes.map((m,i)=>{
+      let delta=i-state.modeIndex;
+      if(delta>2) delta-=modes.length; if(delta<-2) delta+=modes.length;
+      const cls=delta===0?'current':delta===-1?'prev':delta===1?'next':'far';
+      return `<div class="mode-card ${cls}"><div class="mname">${esc(m.name)}</div><div class="mdesc">${esc(m.desc)}</div></div>`;
+    }).join('');
+    return `<section class="screen home">
+      <div class="topbar"><div class="brand">THEORY ROULETTE</div><div class="spacer"></div><div class="pill">COLLECTED <strong>${Object.keys(state.progress.seen||{}).length}/100</strong></div></div>
+      <div class="hero-mark"><span class="c"></span><span class="c"></span><span class="c">↻</span></div>
+      <div class="title">SPIN.<br>THINK. LINK.</div>
+      <p class="subtitle">Turn the wheel through the deck. Draw a card. Use it on practice. Then challenge your own thinking.</p>
+      <div class="mode-rail">${modeEls}</div>
+      <div class="hint"><b>WHEEL</b> choose run · <b>BUTTON</b> start</div>
+    </section>`;
+  }
+
+  function renderDeck(){
+    const deck=currentDeck();
+    state.deckIndex=wrapIndex(state.deckIndex,deck.length);
+    const positions=[-2,-1,0,1,2];
+    const cards=positions.map(pos=>{
+      const card=deck[wrapIndex(state.deckIndex+pos,deck.length)];
+      return cardHTML(card,`pos${pos}`);
+    }).join('');
+    return `<section class="screen deck-screen">${topbar(`ROUND ${state.round+1}/${state.mode.rounds}`)}
+      <div class="kicker">${state.mode.name}</div><div class="deck-zone" id="deckZone">${cards}</div>
+      <div class="deck-footer"><span class="legend-dot i"></span><span class="kicker">INFORM</span><span class="legend-dot a"></span><span class="kicker">INTERVENE</span></div>
+      <div class="hint"><b>WHEEL</b> flick cards · <b>BUTTON</b> draw · shake later for wildcard</div>
+    </section>`;
+  }
+
+  function miniCard(card){
+    return `<div class="mini-card ${card.type}"><div class="mini-icon">${card.type==='inform'?'?':'→'}</div><div class="mini-copy"><div class="mini-cat">${card.type==='inform'?'THEORY THAT INFORMS':'THEORY / APPROACH THAT INTERVENES'}</div><div class="mini-name">${esc(card.name)}</div></div></div>`;
+  }
+
+  function promptForCard(){
+    return state.card.type==='inform'
+      ? 'How could this theory help you understand what is happening?'
+      : 'How could this approach help you respond, and why might it fit here?';
+  }
+
+  function renderChallenge(){
+    return `<section class="screen">${topbar('PRACTICE SITUATION')}${miniCard(state.card)}
+      <div class="casebox casebox-large"><div class="case-title">${esc(state.caseItem.title)}</div><div class="case-text">${esc(state.caseItem.text)}</div>${state.modifier?`<div class="case-new">${esc(state.modifier)}</div>`:''}</div>
+      <div class="hint"><b>BUTTON</b> take the card into the situation</div>
+    </section>`;
+  }
+
+  function renderReflection(){
+    return `<section class="screen">${topbar('YOUR TURN')}${miniCard(state.card)}
+      <div class="reflection-space"><div class="kicker">USE THE CARD</div><div class="reflection-question">${esc(promptForCard())}</div><div class="reflection-nudge">Try to connect the person, context and what this lens changes in your thinking.</div></div>
+      <div class="prompt-box reflection-prompt ${state.isListening?'listening':''}"><div class="speak-state"><span class="pulse"></span>${state.isListening?'LISTENING… release PTT when finished':state.speechSupported?'HOLD PTT TO SPEAK · or press to continue':'PRESS WHEN YOU HAVE THOUGHT IT THROUGH'}</div>${state.transcript?`<div class="transcript reflection-transcript">“${esc(state.transcript)}”</div>`:''}</div>
+      <div class="hint">There is no automatic right/wrong judgement here.</div>
+    </section>`;
+  }
+
+  function renderImpact(){
+    return `<section class="screen">${topbar('TURN THE CARD OVER')}${miniCard(state.card)}
+      ${state.transcript?`<div class="transcript">You said: “${esc(state.transcript)}”</div>`:''}
+      <div class="reveal-grid">
+        <div class="reveal helps"><div class="rlabel">WHAT IT HELPS YOU NOTICE</div><div class="rtext">${esc(state.card.helps)}</div></div>
+        <div class="reveal limits"><div class="rlabel">WHAT IT DOESN’T EXPLAIN ALONE</div><div class="rtext">${esc(state.card.limits)}</div></div>
+      </div>
+      <div class="hint"><b>BUTTON</b> build a theory–intervention bridge · <b>SHAKE</b> wildcard</div>
+    </section>`;
+  }
+
+  function renderLink(){
+    const prompt=state.card.type==='inform'?'Now choose an intervention this theory could inform.':'Now choose an informing theory that could deepen or challenge this intervention.';
+    const opts=state.linkOptions.map((c,i)=>{
+      let delta=i-state.linkIndex;
+      if(delta>1) delta-=state.linkOptions.length; if(delta<-1) delta+=state.linkOptions.length;
+      const cls=delta===0?'current':delta===-1?'prev':delta===1?'next':'far';
+      return `<div class="link-card ${c.type} ${cls}"><div class="cat">${c.type==='inform'?'INFORM':'INTERVENE'}</div><div class="lname">${esc(c.name)}</div><div class="lwhy">${esc(c.summary)}</div></div>`;
+    }).join('');
+    return `<section class="screen">${topbar('MAKE THE BRIDGE')}<div class="link-prompt">${esc(prompt)}</div><div class="link-rail">${opts}</div><div class="hint"><b>WHEEL</b> compare · <b>BUTTON</b> link · none are automatically “wrong”</div></section>`;
+  }
+
+  function renderResult(){
+    const pct=Math.min(100,(state.round+1)/state.mode.rounds*100);
+    const ai=state.aiFeedback?`<div class="combo"><div class="kicker">R1 REFLECTION NOTE</div><div class="why">${esc(state.aiFeedback)}</div></div>`:'';
+    return `<section class="screen">${topbar('ROUND COMPLETE')}
+      <div class="scoreburst"><div class="big">+${state.roundScore}</div><div class="small">REFLECTION XP</div></div>
+      <div class="combo"><div class="kicker">YOUR BRIDGE</div><div class="pair">${esc(state.card.name)} ↔ ${esc(state.linkedCard.name)}</div><div class="why">Two lenses can sit together without saying the same thing. What changes when you use both?</div><div class="progressbar"><span style="width:${pct}%"></span></div></div>
+      ${ai}
+      <div class="hint"><b>BUTTON</b> ${state.round+1>=state.mode.rounds?'finish run':'next round'} · collection saves automatically</div>
+    </section>`;
+  }
+
+  function renderRunEnd(){
+    const seen=Object.keys(state.progress.seen||{}).length;
+    return `<section class="screen">${topbar('RUN COMPLETE')}<div class="kicker">${esc(state.mode.name)}</div><div class="title">GOOD THINKING<br>STAYS OPEN.</div>
+      <div class="run-summary"><div class="stat"><b>${state.score}</b><span>run xp</span></div><div class="stat"><b>${state.chain}</b><span>chain</span></div><div class="stat"><b>${seen}</b><span>collected</span></div></div>
+      <div class="combo"><div class="kicker">NEXT TIME</div><div class="why">Try deliberately choosing a theory you would not normally use. A stronger formulation often comes from noticing what your first explanation leaves out.</div></div>
+      <div class="hint"><b>BUTTON</b> back to modes · best chain ${state.progress.bestChain||0}</div></section>`;
+  }
+
+  function wildcardOverlay(){
+    if(!state.wildcard) return '';
+    return `<div class="wild-overlay"><div class="wild-card"><div class="wild-icon">${esc(state.wildcard.icon)}</div><div class="wild-label">SHAKE WILDCARD · +75 XP</div><div class="wild-name">${esc(state.wildcard.name)}</div><div class="wild-prompt">${esc(state.wildcard.prompt)}</div><div class="wild-bonus">${state.isListening?'LISTENING…':'Hold PTT to speak, or press the button when you have considered it.'}</div></div></div>`;
+  }
+
+  function touchbar(){
+    if(nativeR1) return '';
+    return `<div class="touchbar"><button data-act="prev">◀ WHEEL</button><button data-act="select">BUTTON</button><button data-act="next">WHEEL ▶</button><button data-act="shake">SHAKE</button></div>`;
+  }
+
+  function render(){
+    let html='';
+    if(state.screen==='home') html=renderHome();
+    else if(state.screen==='deck') html=renderDeck();
+    else if(state.screen==='challenge') html=renderChallenge();
+    else if(state.screen==='reflection') html=renderReflection();
+    else if(state.screen==='impact') html=renderImpact();
+    else if(state.screen==='link') html=renderLink();
+    else if(state.screen==='result') html=renderResult();
+    else if(state.screen==='runend') html=renderRunEnd();
+    app.innerHTML=html+wildcardOverlay()+touchbar();
+    bindTouch();
+  }
+
+  function bindTouch(){
+    app.querySelectorAll('[data-act]').forEach(btn=>btn.addEventListener('click',()=>{
+      const a=btn.getAttribute('data-act');
+      if(a==='prev') onWheel(-1); else if(a==='next') onWheel(1); else if(a==='select') onSideClick(); else if(a==='shake') triggerWildcard();
+    }));
+  }
+
+  function startRun(){
+    state.mode=modes[state.modeIndex]; state.round=0; state.score=0; state.chain=0; state.used=[]; state.deckIndex=0;
+    state.card=null; state.caseItem=null; state.transcript=''; state.aiFeedback=null; state.screen='deck'; render();
+  }
+
+  function pickCase(card){
+    const desired=new Set([card.family].concat(familyTagMap[card.family]||[]));
+    const scored=DATA.cases.map(c=>({c,score:c.tags.reduce((n,t)=>n+(desired.has(t)?2:0),0)+Math.random()*2})).sort((a,b)=>b.score-a.score);
+    return pick(scored.slice(0,Math.min(8,scored.length))).c;
+  }
+
+  function drawCurrent(){
+    if(state.drawing) return;
+    const deck=currentDeck(); if(!deck.length) return;
+    state.card=deck[wrapIndex(state.deckIndex,deck.length)]; state.used.push(state.card.id);
+    state.caseItem=pickCase(state.card); state.modifier=Math.random()<.48?pick(DATA.modifiers):null;
+    state.transcript=''; state.aiFeedback=null; state.wildcardUsed=false; state.roundScore=100;
+    state.drawing=true;
+    const zone=document.getElementById('deckZone');
+    if(zone){
+      zone.querySelectorAll('.deck-card').forEach(el=>{
+        if(el.classList.contains('pos0')) el.classList.add('pick');
+        else if(el.classList.contains('pos-1')||el.classList.contains('pos-2')) el.classList.add('fly-left');
+        else el.classList.add('fly-right');
+      });
+    }
+    setTimeout(()=>{state.drawing=false; state.screen='challenge'; render();},470);
+  }
+
+  function buildLinkOptions(){
+    const target=state.card.type==='inform'?'intervene':'inform';
+    const pool=DATA.cards.filter(c=>c.type===target && c.id!==state.card.id);
+    const caseTags=new Set(state.caseItem.tags);
+    const ranked=pool.map(c=>{
+      const tags=[c.family].concat(familyTagMap[c.family]||[]);
+      const overlap=tags.reduce((n,t)=>n+(caseTags.has(t)?1:0),0);
+      return {c,score:overlap*2+Math.random()*3};
+    }).sort((a,b)=>b.score-a.score);
+    const strong=ranked.slice(0,12).map(x=>x.c);
+    const rest=ranked.slice(12).map(x=>x.c);
+    const first=pick(strong); const second=pick(strong.filter(c=>c.id!==first.id)); const third=pick(rest.filter(c=>c.id!==first.id&&c.id!==second.id));
+    state.linkOptions=shuffled([first,second,third].filter(Boolean)); state.linkIndex=0;
+  }
+
+  function lockLink(){
+    state.linkedCard=state.linkOptions[state.linkIndex];
+    const caseTags=new Set(state.caseItem.tags);
+    const tags=[state.linkedCard.family].concat(familyTagMap[state.linkedCard.family]||[]);
+    const overlap=tags.some(t=>caseTags.has(t));
+    state.roundScore+=90+(overlap?20:0)+Math.min(state.chain,5)*10;
+    state.score+=state.roundScore; state.chain+=1;
+    state.progress.bestChain=Math.max(state.progress.bestChain||0,state.chain);
+    state.progress.seen[state.card.id]=(state.progress.seen[state.card.id]||0)+1;
+    state.progress.seen[state.linkedCard.id]=(state.progress.seen[state.linkedCard.id]||0)+1;
+    saveProgress(); state.screen='result'; render();
+  }
+
+  function nextRound(){
+    if(state.round+1>=state.mode.rounds){
+      state.progress.xp+=state.score; state.progress.runs=(state.progress.runs||0)+1; saveProgress(); state.screen='runend'; render(); return;
+    }
+    state.round+=1; state.deckIndex=0; state.card=null; state.linkedCard=null; state.screen='deck'; render();
+  }
+
+  function onWheel(dir){
+    if(state.wildcard) return;
+    if(state.screen==='home'){state.modeIndex=wrapIndex(state.modeIndex+dir,modes.length);render();return;}
+    if(state.screen==='deck'){const deck=currentDeck();state.deckIndex=wrapIndex(state.deckIndex+dir,deck.length);render();return;}
+    if(state.screen==='link'){state.linkIndex=wrapIndex(state.linkIndex+dir,state.linkOptions.length);render();return;}
+  }
+
+  function onSideClick(){
+    if(state.longPressActive) return;
+    if(state.wildcard){resolveWildcard();return;}
+    if(state.screen==='home'){startRun();return;}
+    if(state.screen==='deck'){drawCurrent();return;}
+    if(state.screen==='challenge'){state.screen='reflection';render();return;}
+    if(state.screen==='reflection'){state.roundScore+=state.transcript?50:30; requestReflectionFeedback(); state.screen='impact';render();return;}
+    if(state.screen==='impact'){buildLinkOptions();state.screen='link';render();return;}
+    if(state.screen==='link'){lockLink();return;}
+    if(state.screen==='result'){nextRound();return;}
+    if(state.screen==='runend'){state.screen='home';state.mode=null;render();return;}
+  }
+
+  function triggerWildcard(){
+    if(state.wildcard || state.wildcardUsed) return;
+    if(['challenge','reflection','impact','link'].indexOf(state.screen)===-1) return;
+    state.preWildScreen=state.screen; state.wildcard=pick(DATA.wildcards); state.transcript=''; render();
+  }
+  function resolveWildcard(){
+    state.roundScore+=75; state.wildcardUsed=true; state.wildcard=null; state.isListening=false; render();
+  }
+
+  let recognition=null;
+  function setupSpeech(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){state.speechSupported=false;return;}
+    try{
+      recognition=new SR(); recognition.lang='en-GB'; recognition.interimResults=true; recognition.continuous=true;
+      recognition.onresult=(ev)=>{
+        let text=''; for(let i=0;i<ev.results.length;i++) text+=ev.results[i][0].transcript+' ';
+        state.transcript=text.trim();
+      };
+      recognition.onerror=()=>{state.isListening=false;render();};
+      recognition.onend=()=>{state.isListening=false;render();};
+      state.speechSupported=true;
+    }catch(e){state.speechSupported=false;}
+  }
+  function onLongPressStart(){
+    if(!(state.wildcard||state.screen==='reflection')) return;
+    state.longPressActive=true; state.isListening=true; state.transcript='';
+    if(recognition){try{recognition.start();}catch(e){}}
+    render();
+  }
+  function onLongPressEnd(){
+    if(!state.longPressActive) return;
+    state.longPressActive=false; state.isListening=false;
+    if(recognition){try{recognition.stop();}catch(e){}}
+    if(state.transcript) state.roundScore+=20;
+    render();
+    setTimeout(()=>{state.longPressActive=false;},120);
+  }
+
+  function requestReflectionFeedback(){
+    if(!state.transcript || typeof window.PluginMessageHandler==='undefined') return;
+    const prompt=`You are supporting reflective learning for UK nursing and social work students. Do not mark the learner right or wrong. In no more than 28 words, identify one useful connection in their answer and one curious question that could deepen it. Theory/approach: ${state.card.name}. Situation: ${state.caseItem.text} Learner answer: ${state.transcript}. Return plain text only.`;
+    try{window.PluginMessageHandler.postMessage(JSON.stringify({message:prompt,useLLM:true,wantsR1Response:false,wantsJournalEntry:false}));}catch(e){}
+  }
+
+  window.onPluginMessage=function(data){
+    let text='';
+    try{
+      if((data && data.data)){
+        try{const parsed=JSON.parse(data.data);text=parsed.feedback||parsed.message||data.data;}catch(e){text=data.data;}
+      } else if((data && data.message)) text=data.message;
+    }catch(e){}
+    if(text){state.aiFeedback=String(text).replace(/^['\"]|['\"]$/g,'').slice(0,220); if(state.screen==='result') render();}
+  };
+
+  let lastMag=null, lastShake=0;
+  function setupShake(){
+    const a=(window.creationSensors && window.creationSensors.accelerometer);
+    if(!(a && a.start)) return;
+    try{
+      a.start((d)=>{
+        const mag=Math.sqrt(((d.x||0)*(d.x||0))+((d.y||0)*(d.y||0))+((d.z||0)*(d.z||0)));
+        if(lastMag!==null){
+          const delta=Math.abs(mag-lastMag); const now=Date.now();
+          if(delta>1.25 && now-lastShake>1800){lastShake=now;triggerWildcard();}
+        }
+        lastMag=mag;
+      },{frequency:30});
+    }catch(e){}
+  }
+
+  window.addEventListener('scrollUp',()=>onWheel(-1));
+  window.addEventListener('scrollDown',()=>onWheel(1));
+  window.addEventListener('sideClick',onSideClick);
+  window.addEventListener('longPressStart',onLongPressStart);
+  window.addEventListener('longPressEnd',onLongPressEnd);
+
+  window.addEventListener('keydown',(e)=>{
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp') onWheel(-1);
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown') onWheel(1);
+    else if(e.key==='Enter') onSideClick();
+    else if(e.key.toLowerCase()==='s') triggerWildcard();
+    else if(e.key===' '){e.preventDefault();onLongPressStart();}
+  });
+  window.addEventListener('keyup',(e)=>{if(e.key===' ') onLongPressEnd();});
+
+  try{
+    setupSpeech(); render(); loadProgress(); setupShake();
+  }catch(startError){
+    try{
+      app.innerHTML='<section class="screen home"><div class="topbar"><div class="brand">THEORY ROULETTE</div></div><div class="startup-error"><div class="error-mark">!</div><div class="title">STARTUP ERROR</div><p class="subtitle">The R1 opened the Creation but could not start the game. This screen is deliberately visible so the Creation never fails as a blank page.</p></div></section>';
+    }catch(ignore){}
+  }
+})();
+</script>
 </body>
 </html>
